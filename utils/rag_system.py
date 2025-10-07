@@ -11,10 +11,13 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 class ArxivRAGSystem:
     def __init__(self):
         # 使用OpenAI的嵌入模型 - 符合LangChain 0.3
-        self.embeddings = OpenAIEmbeddings(
-            openai_api_key=os.getenv("OPENAI_API_KEY"),
-            openai_api_base=os.getenv("OPENAI_BASE_URL"),
-            model="text-embedding-3-small"
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={'device': 'cpu'},
+            encode_kwargs={
+                'normalize_embeddings': False,
+                'batch_size': 4  # 减小批处理大小
+            }
         )
         
         # 初始化OpenAI模型 - 符合LangChain 0.3
@@ -124,4 +127,5 @@ class ArxivRAGSystem:
 
 # 全局RAG系统实例
 rag_system = ArxivRAGSystem()
+
 
