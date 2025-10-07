@@ -6,6 +6,8 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 class ArxivRAGSystem:
     def __init__(self):
         # 使用OpenAI的嵌入模型 - 符合LangChain 0.3
@@ -122,3 +124,4 @@ class ArxivRAGSystem:
 
 # 全局RAG系统实例
 rag_system = ArxivRAGSystem()
+
