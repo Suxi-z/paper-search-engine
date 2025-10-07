@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术论文智能搜索引擎</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="logo">
+                <i class="fas fa-search"></i>
+                学术论文智能搜索引擎
+            </h1>
+            <p class="subtitle">基于AI的arXiv论文搜索与智能问答系统</p>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 搜索区域 -->
+            <section class="search-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="输入论文关键词、主题或研究方向...">
+                    <button id="searchBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        搜索论文
+                    </button>
+                </div>
+                <div class="search-controls">
+                    <label for="resultCount">返回结果数:</label>
+                    <select id="resultCount">
+                        <option value="3">3</option>
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- 结果展示区域 -->
+            <section class="results-section">
+                <div class="loading" id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>正在搜索论文中...</p>
+                </div>
+
+                <!-- 论文列表 -->
+                <div class="papers-container" id="papersContainer" style="display: none;">
+                    <h3>搜索结果 <span id="resultsCount"></span></h3>
+                    <div class="papers-list" id="papersList"></div>
+                </div>
+
+                <!-- 问答区域 -->
+                <div class="qa-section" id="qaSection" style="display: none;">
+                    <h3>论文智能问答</h3>
+                    <div class="qa-input">
+                        <input type="text" id="questionInput" placeholder="关于这些论文，你有什么问题？">
+                        <button id="askBtn" class="ask-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            提问
+                        </button>
+                    </div>
+                    
+                    <!-- 回答区域 -->
+                    <div class="answer-section" id="answerSection" style="display: none;">
+                        <div class="answer-header">
+                            <h4>AI回答</h4>
+                            <div class="answer-meta">
+                                <span id="answerTime"></span>
+                            </div>
+                        </div>
+                        <div class="answer-content" id="answerContent"></div>
+                        <div class="sources" id="sourcesList"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部 -->
+        <footer class="footer">
+            <p>Powered by Qwen2-7B & LangChain | arXiv数据源</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
