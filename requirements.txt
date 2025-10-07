@@ -1,10 +1,10 @@
 flask==3.0.2
-langchain==0.3.0
-langchain-community==0.3.0
-langchain-openai==0.2.0
+langchain==0.0.346
+langchain-community==0.0.14
+langchain-openai==0.0.3
 arxiv==2.2.0
 sentence-transformers==2.7.0
-chromadb==0.4.24
+chromadb==0.4.22
 python-dotenv==1.0.1
 requests==2.31.0
-
+tiktoken==0.5.2
