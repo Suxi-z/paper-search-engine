@@ -10,14 +10,13 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 class ArxivRAGSystem:
     def __init__(self):
-        # 使用OpenAI的嵌入模型 - 避免内存问题
+        # 使用OpenAI嵌入，避免内存问题
         self.embeddings = OpenAIEmbeddings(
             openai_api_key=os.getenv("OPENAI_API_KEY"),
             openai_api_base=os.getenv("OPENAI_BASE_URL"),
             model="text-embedding-3-small"
         )
         
-        # 初始化OpenAI模型
         self.llm = ChatOpenAI(
             model="gpt-3.5-turbo",
             openai_api_key=os.getenv("OPENAI_API_KEY"),
@@ -123,3 +122,4 @@ class ArxivRAGSystem:
 
 # 全局RAG系统实例
 rag_system = ArxivRAGSystem()
+
