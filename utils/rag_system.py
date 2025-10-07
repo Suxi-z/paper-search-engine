@@ -9,11 +9,15 @@ from langchain.prompts import PromptTemplate
 import requests
 import json
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 class ArxivRAGSystem:
     def __init__(self):
         # 初始化嵌入模型
         self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={'device': 'cpu'},
+            encode_kwargs={'normalize_embeddings': False}
         )
         
         # 初始化OpenAI模型
@@ -124,3 +128,4 @@ class ArxivRAGSystem:
 
 # 全局RAG系统实例
 rag_system = ArxivRAGSystem()
+
