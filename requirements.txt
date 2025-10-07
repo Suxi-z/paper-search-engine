@@ -1,11 +1,8 @@
-flask==3.0.2
+flask==2.3.3
+arxiv==2.1.3
+python-dotenv==1.0.0
+requests==2.31.0
+openai==0.28.1
+numpy==1.24.3
 langchain==0.0.347
 langchain-community==0.0.28
-langchain-openai==0.0.6
-arxiv==2.2.0
-sentence-transformers==2.7.0
-chromadb==0.4.22
-python-dotenv==1.0.1
-requests>=2.31.0,<3
-tiktoken==0.5.2
-numpy==1.24.3
