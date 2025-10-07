@@ -1,10 +1,9 @@
-from langchain_openai import ChatOpenAI
 import os
 import arxiv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms import Ollama
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 import requests
@@ -17,9 +16,9 @@ class ArxivRAGSystem:
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
         
-        # 初始化Ollama模型
+        # 初始化OpenAI模型
         self.llm = ChatOpenAI(
-            model="gpt-3.5-turbo",  # 或者 "gpt-4" 如果你有访问权限
+            model="gpt-3.5-turbo",
             openai_api_key=os.getenv("OPENAI_API_KEY"),
             openai_api_base=os.getenv("OPENAI_BASE_URL"),
             temperature=0.1
@@ -70,7 +69,6 @@ class ArxivRAGSystem:
         
         chunks = text_splitter.create_documents(documents)
         
-        # 创建向量存储
         # 创建向量存储 - 使用Chroma
         self.vector_store = Chroma.from_documents(
             documents=chunks, 
@@ -125,6 +123,4 @@ class ArxivRAGSystem:
         }
 
 # 全局RAG系统实例
-
 rag_system = ArxivRAGSystem()
-
