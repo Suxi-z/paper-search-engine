@@ -71,7 +71,12 @@ class ArxivRAGSystem:
         chunks = text_splitter.create_documents(documents)
         
         # 创建向量存储
-        self.vector_store = FAISS.from_documents(chunks, self.embeddings)
+        # 创建向量存储 - 使用Chroma
+        self.vector_store = Chroma.from_documents(
+            documents=chunks, 
+            embedding=self.embeddings,
+            persist_directory="./chroma_db"
+        )
         
         # 创建检索链
         prompt_template = """使用以下上下文来回答用户的问题。如果你不知道答案，就说你不知道，不要编造答案。
@@ -122,3 +127,4 @@ class ArxivRAGSystem:
 # 全局RAG系统实例
 
 rag_system = ArxivRAGSystem()
+
