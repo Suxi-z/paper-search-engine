@@ -2,22 +2,19 @@ import os
 import arxiv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-import requests
-import json
 
+# 减少内存使用
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 class ArxivRAGSystem:
     def __init__(self):
-        # 初始化嵌入模型
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'},
-            encode_kwargs={'normalize_embeddings': False}
+        # 使用OpenAI的嵌入模型，避免复杂的本地模型依赖
+        self.embeddings = OpenAIEmbeddings(
+            openai_api_key=os.getenv("OPENAI_API_KEY"),
+            openai_api_base=os.getenv("OPENAI_BASE_URL")
         )
         
         # 初始化OpenAI模型
@@ -73,23 +70,21 @@ class ArxivRAGSystem:
         
         chunks = text_splitter.create_documents(documents)
         
-        # 创建向量存储 - 使用Chroma
+        # 创建向量存储
         self.vector_store = Chroma.from_documents(
             documents=chunks, 
-            embedding=self.embeddings,
-            persist_directory="./chroma_db"
+            embedding=self.embeddings
         )
         
         # 创建检索链
-        prompt_template = """使用以下上下文来回答用户的问题。如果你不知道答案，就说你不知道，不要编造答案。
-        同时，请提供引用的论文标题。
+        prompt_template = """使用以下上下文来回答用户的问题。
 
         上下文:
         {context}
 
         问题: {question}
 
-        请用中文回答，并注明引用来源:"""
+        请用中文回答:"""
         
         PROMPT = PromptTemplate(
             template=prompt_template, input_variables=["context", "question"]
@@ -99,7 +94,6 @@ class ArxivRAGSystem:
             llm=self.llm,
             chain_type="stuff",
             retriever=self.vector_store.as_retriever(search_kwargs={"k": 3}),
-            chain_type_kwargs={"prompt": PROMPT},
             return_source_documents=True
         )
         
@@ -112,20 +106,10 @@ class ArxivRAGSystem:
         
         result = self.qa_chain({"query": question})
         
-        # 提取引用来源
-        sources = []
-        for doc in result.get('source_documents', []):
-            content = doc.page_content
-            # 从内容中提取标题
-            if "标题:" in content:
-                title = content.split("标题:")[1].split("\n")[0].strip()
-                sources.append(title)
-        
         return {
             "answer": result["result"],
-            "sources": list(set(sources))[:3]  # 去重并限制数量
+            "sources": ["基于搜索的论文内容"]
         }
 
 # 全局RAG系统实例
 rag_system = ArxivRAGSystem()
-
