@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from utils.rag_system import rag_system
 import os
-from utils.rag_system import rag_system
+
 
 def create_app():
     app = Flask(__name__)
@@ -74,3 +74,4 @@ def create_app():
     
 
     return app
+
